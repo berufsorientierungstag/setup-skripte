@@ -20,6 +20,7 @@ bash_profile_setup()
 		echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
 		echo 'PATH=$PATH:$HOME/.gem/bin' >> ~/.bash_profile
 		echo 'alias start="cd ~/Desktop/berufsorientierungstag/ && ~/Desktop/berufsorientierungstag/bin/start"' >> ~/.bash_profile
+		echo 'alias edit="open /Applications/Sublime\ Text.app ~/Desktop/berufsorientierungstag/bots/template_bot.rb"' >> ~/.bash_profile
 		echo 'alias save="cd ~/Desktop/berufsorientierungstag/ && git add . && git commit -am \"Automatical\" && git push"' >> ~/.bash_profile
 	fi
 }
