@@ -1,0 +1,115 @@
+#!/bin/bash
+computer_number=$(< ~/Documents/Berufsorientierungstag/settings.ini)
+center()
+{
+    [[ -t 1 ]] && wid=$(tput cols) || wid=80
+    printf "%$(( (wid + ${#1}) / 2 ))s\n" "$1"
+}
+
+title()
+{
+    center "----- $1 -----"
+}
+
+countdown()
+{
+    secs=$1
+    while [ $secs -gt 0 ]; do
+        echo -ne " Es geht weiter in: $secs\033[0K\r"
+	sleep 1
+        : $((secs--))
+    done
+}
+
+clear
+cat << "EOF"
+
+                                                                                              ,';`  
+                                                                                            .+''''' 
+                                                                                           `''''''';
+                                                                                           '''''''''
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  +''''''''
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,  +''''''''
+,,`                                                                                        ++'''''''
+,,.                                                                                        `+'''''':
+,,.                                                                                         .'''''; 
+,,.                                                                                           ,;:`  
+,,.                                                                                                 
+,,.                          `                                                                      
+,,.     ##@               '##       ##@                                                       `,,   
+,,.     ##@               `##:      ##:                                                       `,,   
+,,.     ##@                @#@     .##           `                                            `,,   
+,,.     ##@    @#@    ##   ;#+     ##@   @#'     ;@@@@;     #@.     ,@@@@,     ,#@:   ,#@     `,,   
+,,.     ##@    @##,   ##    ##,    ##:   @#'    ########    ##.    @##@@##@    .###   ,#@     `,,   
+,,.     ##@    @##@   ##    @#@   .#+    @#'   ###`  `+.    ##.   @##`  `#@@   .###'  ,#@     `,,   
+,,.     ##@    @#+#;  ##    ;##   ##@    @#'   @#@          ##.  `##:    ,#+   .####  ,#@     `,,   
+,,.     ##@    @#`##  ##     ##.  ##:    @#'   @##+`        ##.  :##      ##:  .#@+#+ ,#@     `,,   
+,,.     ##@    @# @#+ @#     @## .##     @#'    #####@.     ##.  ###      ##+  .#@`#+ ,#@     `,,   
+,,.     ##@    @#``## @#     ;## ##@     @#'     @######    ##.  ###      ##+  .#@ @#@.#@     `,,   
+,,.     ##@    @#` @#;@#      ##`@#,     @#'       `'+##`   ##.  +##      ##'  .#@  ##`#@     `,,   
+,,.     ##@    @#` `+@##      @#;##      @#'         .##,   ##.  ,##     `##,  .#@  ##'#@     `,,   
+,,.     ##@    @#`  @###      ;###@      @#'         `##.   ##.   ##'    '##   .#@   #@#@     `,,   
+,,.     ##@    @#`  `###       ###,      @#'   @@'..:#@@    ##.   :##;` ;##;   .#@   +##@     `,,   
+,,.     ##@    @#.   @##       @##       @#'   #######@     ##.    ,@#####;    .#@    ##@     `,,   
+,,.     `..    .`    `.`       .,,       .``     ,'':       `.       `::.       `.    .`.     `,,   
+,,.                                                                                           `,,   
+,,.                                                                                           `,,   
+,,.                                                                                           `,,   
+,,.                                                                                           `,,   
+,,.                                                                                           `,,   
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,   
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+
+EOF
+
+read -n 1 -s -p "Willkommen zum Berufsorientierungstag! (Drücke irgendeine Taste) "
+clear
+
+title "Einstellungen"
+echo "Du sitzt an Platz Nummer: $computer_number"
+read -p "Wie heißt du mit Vornamen? `echo $'\nName: '`" first_name
+
+clear
+
+title "Einstellungen"
+read -p "Super $first_name! Nun gebe bitte noch deinen Nachnamen ein! `echo $'\nName: '`" last_name
+
+clear
+
+title "Einstellungen"
+read -p "Und als letztes noch deine E-Mail Adresse, damit wir dir am Ende dein Ergebnis schicken können! `echo $'\nEmail: '`" email
+
+clear
+
+title "Gleich gehts los!"
+echo "Perfekt! Nun bitte ich dich um einen kleinen Moment gedult. In kürze werde ich ein paar Einstellungen vornehmen, damit wir starten können!"
+
+countdown 10
+clear
+
+title "Vorbereitungen"
+echo "Klone Hauptrepository..."
+git clone git@github.com:berufsorientierungstag/berufsorientierungstag.git ~/Desktop/berufsorientierungstag
+cd ~/Desktop/berufsorientierungstag/
+git remote set-url origin git@github.com:berufsorientierungstag/berufsorientierungstag-pc$computer_number.git
+
+echo "{" > settings.ini
+echo "		\"settings\": {" >> settings.ini
+echo " 				\"computer_number\":$computer_number," >> settings.ini
+echo "				\"first_name\":\"$first_name\"," >> settings.ini
+echo "				\"last_name\":\"$last_name\"," >> settings.ini
+echo "				\"email\":\"$email\"," >> settings.ini
+echo "		}" >> settings.ini
+echo "}" >> settings.ini
+
+git add .
+git commit -am "Automatical"
+git push
+
+bundle install
+
+echo "Fertig!"
+
+
+countdown 3

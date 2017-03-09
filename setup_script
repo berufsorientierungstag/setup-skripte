@@ -1,0 +1,187 @@
+#!/bin/bash
+center()
+{
+    [[ -t 1 ]] && wid=$(tput cols) || wid=80
+    printf "%$(( (wid + ${#1}) / 2 ))s\n" "$1"
+}
+
+title()
+{
+    center "----- $1 -----"
+}
+
+bash_profile_setup()
+{
+	clear
+	title "InVision BOT Setup - Bash Profile Setup"
+	read -p "Soll die Bash Profile neu erzeugt und angepasst werden? (j/n) " response
+	if [ "$response" == "j" ]; then
+		echo 'alias clear_desktop="rm -rf ~/Desktop/* >> /dev/null"' > ~/.bash_profile
+		echo 'eval "$(rbenv init -)"' >> ~/.bash_profile
+		echo 'PATH=$PATH:$HOME/.gem/bin' >> ~/.bash_profile
+		echo 'alias start="cd ~/Desktop/berufsorientierungstag/ && ~/Desktop/berufsorientierungstag/bin/start"' >> ~/.bash_profile
+		echo 'alias save="cd ~/Desktop/berufsorientierungstag/ && git add . && git commit -am \"Automatical\" && git push"' >> ~/.bash_profile
+	fi
+}
+
+brew_installation()
+{
+	clear
+	title "InVision BOT Setup - Brew installation"	
+	read -p "Brew installieren? (j/n) " response
+	if [ "$response" == "j" ]; then
+		clear
+		title "InVision BOT Setup - Brew installation - läuft"
+		/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	fi
+}
+
+rbenv_installation()
+{
+	brew list >> /dev/null
+	if [ $? == 0 ]; then
+		clear
+		title "InVision BOT Setup - RBenv installation"
+		read -p "RBenv installieren? (j/n) " response
+		if [ "$response" == "j" ]; then
+			clear
+			title "InVision BOT Setup - RBenv installation - läuft"
+			brew install rbenv
+		fi
+	else
+		clear
+		title "InVision BOT Setup - Abhängigkeiten fehlen"
+		read -p "Brew fehlt zur Installation von RBenv - soll die Installation gestartet werden? (j/n) " response
+		if [ "$response" == "j" ]; then
+			brew_installation
+		fi
+	fi
+}
+
+ruby_installation()
+{
+	rbenv global >> /dev/null
+	if [ $? == 0 ]; then
+		clear
+		title "InVision BOT Setup - Ruby installation"
+		read -p "Ruby installieren? (j/n) " response
+		if [ "$response" == "j" ]; then
+			read -p "Welche Ruby Version soll installiert werden? (2.4.0) " ruby_version
+			if [ "$ruby_version" == "" ]; then
+				ruby_version="2.4.0"
+			fi
+			rbenv install $ruby_version 
+		fi
+	else
+		clear
+		title "InVision BOT Setup - Abhängigkeiten fehlen"
+		read -p "RBenv fehlt zur Installation von Ruby - soll die Installation gestartet werden? (j/n) " response
+		if [ "$response" == "j" ]; then
+			rbenv_installation
+		fi
+	fi
+}
+
+sdl2_installation()
+{
+	brew list >> /dev/null
+	if [ $? == 0 ]; then
+		clear
+		title "InVision BOT Setup - SDL2 installation"
+		read -p "SDL2 installieren? (j/n) " response
+		if [ "$response" == "j" ]; then
+			clear
+			title "InVision BOT Setup - SDL2 installation - läuft"
+			brew install sdl2 
+		fi
+	else
+		clear
+		title "InVision BOT Setup - Abhängigkeiten fehlen"
+		read -p "Brew fehlt zur Installation von RBenv - soll die Installation gestartet werden? (j/n) " response
+		if [ "$response" == "j" ]; then
+			brew_installation
+		fi
+	fi
+}
+
+is_installed_bool_converter()
+{
+	if [ "$1" == "1" ]; then
+		echo "installiert"
+	else
+		echo "nicht installiert"
+	fi	
+}
+
+check_installed()
+{
+	brew=0
+	rbenv=0
+	sdl2=0
+
+	brew list >> /dev/null
+	if [ $? == 0 ]; then
+		brew=1
+	fi
+
+	rbenv global >> /dev/null
+	if [ $? == 0 ]; then
+		rbenv=1
+	fi
+	
+	sdl2-config --version >> /dev/null
+	if [ $? == 0 ]; then
+		sdl2=1
+	fi
+}
+
+get_current_ruby_version()
+{
+	ruby_version=$(ruby --version)
+}
+
+setup_finished()
+{
+	clear
+	title "InVision BOT Setup - Installation beendet"
+	
+	check_installed
+	get_current_ruby_version	
+
+	echo "Komponenten:"
+	echo "Brew: $(is_installed_bool_converter $brew)"
+	echo "RBenv: $(is_installed_bool_converter $rbenv)"
+	echo "Ruby: $ruby_version"
+	echo "SDL2: $(is_installed_bool_converter $sdl2)"
+	
+	read -n 1 -s -p "Installation beendet! (Drücke irgendeine Taste) "
+	clear
+}
+
+redirect_to_user_script()
+{
+	title "InVision BOT Setup - Benutzerscript ausführen"
+	read -p "Soll das Benutzerscript ausgeführt werden? (j/n) " response
+	if [ "$response" == "j" ]; then
+		~/Documents/Berufsorientierungstag/user_script
+	fi
+}
+
+clear
+title "InVision BOT Setup"
+read -p "Setup ausführen? (j/n) " response
+if [ "$response" == "j" ]; then
+	bash_profile_setup
+
+	brew_installation
+
+	rbenv_installation
+
+	ruby_installation
+
+	sdl2_installation
+
+	setup_finished
+
+	redirect_to_user_script
+fi
