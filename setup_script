@@ -62,6 +62,7 @@ ruby_installation()
 {
 	rbenv global >> /dev/null
 	if [ $? == 0 ]; then
+		rbenv init 2> /null/dev
 		clear
 		title "InVision BOT Setup - Ruby installation"
 		read -p "Ruby installieren? (j/n) " response
@@ -72,6 +73,13 @@ ruby_installation()
 			fi
 			rbenv install $ruby_version 
 		fi
+		clear
+		title "InVision BOT Setup - Ruby standart setzen"
+		read -p "Welche Ruby Version soll standartmäßig gesetzt werden? (2.4.0) " ruby_version
+		if [ "$ruby_version" == "" ]; then
+			ruby_version="2.4.0"
+		fi
+		rbenv global $ruby_version 
 	else
 		clear
 		title "InVision BOT Setup - Abhängigkeiten fehlen"
