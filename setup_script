@@ -139,22 +139,22 @@ check_installed()
 	bundler=0
 	sdl2=0
 
-	brew list >> /dev/null
+	brew list 2> /dev/null
 	if [ $? == 0 ]; then
 		brew=1
 	fi
 
-	rbenv global >> /dev/null
+	rbenv global 2> /dev/null
 	if [ $? == 0 ]; then
 		rbenv=1
 	fi
 	
-	bundler --version >> /dev/null
+	bundler --version 2> /dev/null
 	if [ $? == 0 ]; then
 		bundler=1
 	fi
 
-	sdl2-config --version >> /dev/null
+	sdl2-config --version 2> /dev/null
 	if [ $? == 0 ]; then
 		sdl2=1
 	fi
@@ -204,6 +204,8 @@ if [ "$response" == "j" ]; then
 	rbenv_installation
 
 	ruby_installation
+	
+	bundler_installation
 
 	sdl2_installation
 
