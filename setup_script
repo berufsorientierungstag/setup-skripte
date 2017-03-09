@@ -27,7 +27,7 @@ bash_profile_setup()
 brew_installation()
 {
 	clear
-	title "InVision BOT Setup - Brew installation"	
+	title "InVision BOT Setup - Brew Installation"	
 	read -p "Brew installieren? (j/n) " response
 	if [ "$response" == "j" ]; then
 		clear
@@ -41,7 +41,7 @@ rbenv_installation()
 	brew list >> /dev/null
 	if [ $? == 0 ]; then
 		clear
-		title "InVision BOT Setup - RBenv installation"
+		title "InVision BOT Setup - RBenv Installation"
 		read -p "RBenv installieren? (j/n) " response
 		if [ "$response" == "j" ]; then
 			clear
@@ -64,7 +64,7 @@ ruby_installation()
 	if [ $? == 0 ]; then
 		rbenv init 2> /null/dev
 		clear
-		title "InVision BOT Setup - Ruby installation"
+		title "InVision BOT Setup - Ruby Installation"
 		read -p "Ruby installieren? (j/n) " response
 		if [ "$response" == "j" ]; then
 			read -p "Welche Ruby Version soll installiert werden? (2.4.0) " ruby_version
@@ -90,12 +90,23 @@ ruby_installation()
 	fi
 }
 
+bundler_installation()
+{
+		clear
+		title "InVision BOT Setup - Bundler Installation"
+		read -p "Bundler installieren? (j/n) " response
+		if [ "$response" == "j" ]; then
+			gem install bundler	
+		fi
+	
+}
+
 sdl2_installation()
 {
 	brew list >> /dev/null
 	if [ $? == 0 ]; then
 		clear
-		title "InVision BOT Setup - SDL2 installation"
+		title "InVision BOT Setup - SDL2 Installation"
 		read -p "SDL2 installieren? (j/n) " response
 		if [ "$response" == "j" ]; then
 			clear
@@ -125,6 +136,7 @@ check_installed()
 {
 	brew=0
 	rbenv=0
+	bundler=0
 	sdl2=0
 
 	brew list >> /dev/null
@@ -137,6 +149,11 @@ check_installed()
 		rbenv=1
 	fi
 	
+	bundler --version >> /dev/null
+	if [ $? == 0 ]; then
+		bundler=1
+	fi
+
 	sdl2-config --version >> /dev/null
 	if [ $? == 0 ]; then
 		sdl2=1
@@ -160,6 +177,7 @@ setup_finished()
 	echo "Brew: $(is_installed_bool_converter $brew)"
 	echo "RBenv: $(is_installed_bool_converter $rbenv)"
 	echo "Ruby: $ruby_version"
+	echo "Bundler: $(is_installed_bool_converter $bundler)"
 	echo "SDL2: $(is_installed_bool_converter $sdl2)"
 	
 	read -n 1 -s -p "Installation beendet! (Drücke irgendeine Taste) "
