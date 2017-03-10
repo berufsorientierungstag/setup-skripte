@@ -39,7 +39,7 @@ brew_installation()
 
 rbenv_installation()
 {
-	brew list >> /dev/null
+	brew list &> /dev/null
 	if [ $? == 0 ]; then
 		clear
 		title "InVision BOT Setup - RBenv Installation"
@@ -61,9 +61,9 @@ rbenv_installation()
 
 ruby_installation()
 {
-	rbenv global >> /dev/null
+	rbenv global &> /dev/null
 	if [ $? == 0 ]; then
-		rbenv init 2> /null/dev
+		eval "$(rbenv init -)"
 		clear
 		title "InVision BOT Setup - Ruby Installation"
 		read -p "Ruby installieren? (j/n) " response
@@ -104,7 +104,7 @@ bundler_installation()
 
 sdl2_installation()
 {
-	brew list >> /dev/null
+	brew list &> /dev/null
 	if [ $? == 0 ]; then
 		clear
 		title "InVision BOT Setup - SDL2 Installation"
@@ -140,22 +140,22 @@ check_installed()
 	bundler=0
 	sdl2=0
 
-	brew list 2> /dev/null
+	brew list &> /dev/null
 	if [ $? == 0 ]; then
 		brew=1
 	fi
 
-	rbenv global 2> /dev/null
+	rbenv global &> /dev/null
 	if [ $? == 0 ]; then
 		rbenv=1
 	fi
 	
-	bundler --version 2> /dev/null
+	bundler --version &> /dev/null
 	if [ $? == 0 ]; then
 		bundler=1
 	fi
 
-	sdl2-config --version 2> /dev/null
+	sdl2-config --version &> /dev/null
 	if [ $? == 0 ]; then
 		sdl2=1
 	fi
