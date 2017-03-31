@@ -83,7 +83,7 @@ read -p "Und als letztes noch deine E-Mail Adresse, damit wir dir am Ende dein E
 clear
 
 title "Gleich gehts los!"
-echo "Perfekt! Nun bitte ich dich um einen kleinen Moment gedult. In kürze werde ich ein paar Einstellungen vornehmen, damit wir starten können!"
+echo "Perfekt! Nun bitte ich dich um einen kleinen Moment Geduld. In kürze werde ich ein paar Einstellungen vornehmen, damit wir starten können!"
 
 countdown 10
 clear
