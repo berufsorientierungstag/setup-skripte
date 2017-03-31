@@ -99,7 +99,7 @@ echo "		\"settings\": {" >> settings.ini
 echo " 				\"computer_number\":$computer_number," >> settings.ini
 echo "				\"first_name\":\"$first_name\"," >> settings.ini
 echo "				\"last_name\":\"$last_name\"," >> settings.ini
-echo "				\"email\":\"$email\"," >> settings.ini
+echo "				\"email\":\"$email\"" >> settings.ini
 echo "		}" >> settings.ini
 echo "}" >> settings.ini
 
